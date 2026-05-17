@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Prime Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-deep: #0d0f1a;
+            --bg-card: #13162a;
+            --accent: #7c6af7;
+            --accent-glow: rgba(124,106,247,0.35);
+            --accent2: #f76a8c;
+            --teal: #4ecdc4;
+            --text-primary: #eef0ff;
+            --text-secondary: #8890b5;
+            --text-muted: #555e80;
+            --border: rgba(255,255,255,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg-deep);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(124,106,247,0.14) 0%, transparent 65%);
+            top: -200px; left: -200px;
+            pointer-events: none;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(78,205,196,0.09) 0%, transparent 65%);
+            bottom: -100px; right: -100px;
+            pointer-events: none;
+        }
+
+        .grid-bg {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        .navbar-prime {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(13,15,26,0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 28px;
+            z-index: 100;
+        }
+
+        .brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, var(--accent), var(--teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-dot {
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent);
+            animation: pulse-dot 2s ease infinite;
+            -webkit-text-fill-color: unset;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.4); opacity: 0.6; }
+        }
+
+        .auth-card {
+            position: relative;
+            z-index: 10;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 44px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+            animation: card-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes card-rise {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-eyebrow {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--text-primary);
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+
+        .card-sub {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 36px;
+            line-height: 1.5;
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .input-icon-wrap { position: relative; }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 13px 16px 13px 44px;
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.93rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-input::placeholder { color: var(--text-muted); }
+
+        .form-input:focus {
+            border-color: var(--accent);
+            background: rgba(124,106,247,0.06);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .btn-prime {
+            width: 100%;
+            background: var(--accent);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-top: 8px;
+            box-shadow: 0 4px 20px rgba(124,106,247,0.4);
+        }
+
+        .btn-prime:hover {
+            background: #6a58e6;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 28px rgba(124,106,247,0.5);
+        }
+
+        .btn-prime:active { transform: scale(0.98); }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 28px 0 20px;
+            color: var(--text-muted);
+            font-size: 0.78rem;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: var(--border);
+        }
+
+        .footer-link {
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .footer-link a {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-link a:hover { color: var(--teal); }
+
+        .alert-error {
+            background: rgba(247,106,140,0.1);
+            border: 1px solid rgba(247,106,140,0.3);
+            color: #f76a8c;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<nav class="navbar-prime">
+    <a class="brand" href="#">
+        <div class="brand-dot"></div>
+        Prime Chat
+    </a>
+</nav>
+
+<div class="auth-card">
+    <div class="card-eyebrow">Welcome back</div>
+    <h1 class="card-title">Sign in</h1>
+    <p class="card-sub">Enter your credentials to continue chatting.</p>
+
+    <div th:if="${param.error}" class="alert-error">
+        <i class="fas fa-circle-exclamation"></i>
+        Invalid username or password. Please try again.
+    </div>
+
+    <form method="post" action="/login">
+        <div class="form-group">
+            <label class="form-label">Username</label>
+            <div class="input-icon-wrap">
+                <i class="fas fa-user input-icon"></i>
+                <input type="text" class="form-input" name="username" placeholder="Enter your username" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Password</label>
+            <div class="input-icon-wrap">
+                <i class="fas fa-lock input-icon"></i>
+                <input type="password" class="form-input" name="password" placeholder="Enter your password" required />
+            </div>
+        </div>
+        <button type="submit" class="btn-prime">Sign In →</button>
+    </form>
+
+    <div class="divider">or</div>
+
+    <div class="footer-link">
+        Don't have an account? <a href="/register">Create one</a>
+    </div>
+</div>
+
+</body>
+</html>
