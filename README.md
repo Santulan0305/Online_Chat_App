@@ -1,4 +1,4 @@
-# 🚆 Online Chat Application
+# 🚆 Prime Chat Application
 
 A real-time one-to-one chat web application built using **Java 17, Spring Boot, Spring Security, MySQL, WebSocket, and Thymeleaf**.  
 This application allows users to register, log in, and chat with other users in real time in a secure and responsive environment.
